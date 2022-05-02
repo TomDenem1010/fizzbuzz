@@ -76,31 +76,37 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+        
         <plugin>
-          <groupId>org.pitest</groupId>
-          <artifactId>pitest-maven</artifactId>
-          <version>1.4.10</version>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.7.4</version>
 
-          <!--attach execution to maven's test phase-->
-          <executions>
-              <execution>
-                  <id>pit-report</id>
-                  <phase>test</phase>
-                  <goals>
-                      <goal>mutationCoverage</goal>
-                  </goals>
-              </execution>
-          </executions>
+				<!-- ez azért kell mert különben nem találja meg a junit5 tesztjeinket -->
+				<dependencies>
+					<dependency>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-junit5-plugin</artifactId>
+						<version>0.15</version>
+					</dependency>
+				</dependencies>
 
-          <!--allows to work with JUnit 5-->
-          <dependencies>
-              <dependency>
-                  <groupId>org.pitest</groupId>
-                  <artifactId>pitest-junit5-plugin</artifactId>
-                  <version>0.9</version>
-              </dependency>
-          </dependencies>
-        </plugin>
+				<configuration>
+					<!-- https://pitest.org/quickstart/maven/ -->
+					<reportsDirectory>target/pit-reports/pitest-${owasp.timestamp}</reportsDirectory>
+					<timestampedReports>false</timestampedReports>
+
+					<avoidCallsTo>
+						<avoidCallsTo>java.util.logging</avoidCallsTo>
+						<avoidCallsTo>org.slf4j</avoidCallsTo>
+						<avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
+						<avoidCallsTo>org.apache.log4j</avoidCallsTo>
+						<avoidCallsTo>org.apache.logging</avoidCallsTo>
+						<avoidCallsTo>io.prometheus.client</avoidCallsTo>
+					</avoidCallsTo>
+				</configuration>
+			</plugin>
+
       </plugins>
     </pluginManagement>
   </build>
